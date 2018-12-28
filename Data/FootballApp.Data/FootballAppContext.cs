@@ -16,6 +16,8 @@ namespace FootballApp.Data
 
         public DbSet<Season> Seasons { get; set; }
 
+        public DbSet<Standing> Standings { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

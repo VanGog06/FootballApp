@@ -33,7 +33,8 @@ namespace Sandbox
                 serviceProvider = serviceScope.ServiceProvider;
                 //SeedCompetitions(client, serviceProvider);
                 //SeedTeams(client, serviceProvider);
-                SeedSeasons(client, serviceProvider);
+                //SeedSeasons(client, serviceProvider);
+                SeedStandings(client, serviceProvider);
             }
         }
 
@@ -146,6 +147,55 @@ namespace Sandbox
                         };
 
                         context.Seasons.AddRange(season);
+                    }
+
+                }
+            }
+
+            context.SaveChanges();
+        }
+
+        private static void SeedStandings(FootballClient client, IServiceProvider serviceProvider)
+        {
+            var context = serviceProvider.GetService<FootballAppContext>();
+
+            var responses = new List<Standings>();
+
+            foreach (int id in CompetitionIds)
+            {
+                var response = client.Get<Standings>("competitions/{id}/standings", id);
+                responses.Add(response);
+            }
+
+            foreach (Standings response in responses)
+            {
+                foreach (Table table in response.StandingsCollection)
+                {
+                    string type = table.Type;
+
+                    foreach (Standing responseStanding in table.TableCollection)
+                    {
+                        string teamName = responseStanding.Team.Name;
+                        var databaseTeam = context.Teams.FirstOrDefault(t => t.Name == teamName);
+
+                        if (databaseTeam == null) continue;
+
+                        var standing = new FootballApp.Data.DbModels.Standing
+                        {
+                            Draw = responseStanding.Draw,
+                            GoalDifference = responseStanding.GoalDifference,
+                            GoalsAgainst = responseStanding.GoalsAgainst,
+                            GoalsFor = responseStanding.GoalsFor,
+                            Lost = responseStanding.Lost,
+                            PlayedGames = responseStanding.PlayedGames,
+                            Points = responseStanding.Points,
+                            Position = responseStanding.Position,
+                            TeamId = databaseTeam.Id,
+                            Won = responseStanding.Won,
+                            Type = char.ToUpper(type[0]) + type.Substring(1)
+                    };
+
+                        context.Standings.AddRange(standing);
                     }
                 }
             }

@@ -13,10 +13,10 @@ namespace FootballApp.Data.DbModels
 
         public int? WinnerId { get; set; }
 
-        public Team Winner { get; set; }
+        public virtual Team Winner { get; set; }
 
         public int? CompetitionId { get; set; }
 
-        public Competition Competition { get; set; }
+        public virtual Competition Competition { get; set; }
     }
 }

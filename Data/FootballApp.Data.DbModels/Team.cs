@@ -22,6 +22,6 @@ namespace FootballApp.Data.DbModels
 
         public int CompetitionId { get; set; }
 
-        public Competition Competition { get; set; }
+        public virtual Competition Competition { get; set; }
     }
 }

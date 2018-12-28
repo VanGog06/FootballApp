@@ -14,6 +14,6 @@ namespace FootballApp.Data.DbModels
 
         public string Country { get; set; }
 
-        public ICollection<Season> Seasons { get; set; }
+        public virtual ICollection<Season> Seasons { get; set; }
     }
 }

@@ -4,14 +4,16 @@ using FootballApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FootballApp.Data.Migrations
 {
     [DbContext(typeof(FootballAppContext))]
-    partial class FootballAppContextModelSnapshot : ModelSnapshot
+    [Migration("20181228121621_addedStandingsTable")]
+    partial class addedStandingsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,8 +84,6 @@ namespace FootballApp.Data.Migrations
                     b.Property<int>("Position");
 
                     b.Property<int>("TeamId");
-
-                    b.Property<string>("Type");
 
                     b.Property<int>("Won");
 
