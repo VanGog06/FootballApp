@@ -18,12 +18,13 @@ namespace FootballApp.Data
 
         public DbSet<Standing> Standings { get; set; }
 
+        public DbSet<Player> Players { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);
-            // Customize the ASP.NET Identity model and override the defaults if needed.
-            // For example, you can rename the ASP.NET Identity table names and more.
-            // Add your customizations after calling base.OnModelCreating(builder);
+            builder.Entity<Player>()
+                .Property(p => p.NumberOfGoals)
+                .HasDefaultValue(0);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
