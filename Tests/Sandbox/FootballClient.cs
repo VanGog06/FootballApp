@@ -27,17 +27,5 @@ namespace Sandbox
 
             return response.Data;
         }
-
-        public IRestResponse<T> Get2<T>(string url, int id) where T : new()
-        {
-            this.request = new RestRequest(url);
-
-            this.request.AddUrlSegment("id", id);
-            this.request.AddHeader("X-Auth-Token", ApiKey);
-
-            IRestResponse<T> response = this.client.Execute<T>(this.request);
-
-            return response;
-        }
     }
 }

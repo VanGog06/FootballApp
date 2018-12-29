@@ -18,7 +18,7 @@ namespace Sandbox
     {
         private static readonly List<int> CompetitionsIds = new List<int>
         {
-            2002, 2003, 2014, 2015, 2016, 2019, 2021
+            2002, 2003, 2014, 2015, 2019, 2021
         };
 
         private static readonly List<int> TeamsIds = new List<int>
@@ -27,7 +27,6 @@ namespace Sandbox
             668, 670, 671, 672, 673, 674, 675, 676, 677, 678, 679, 680, 681, 682, 684, 1913, 1914, 1920,
             77, 78, 80, 81, 82, 86, 87, 88, 90, 92, 94, 95, 250, 263, 278, 298, 299, 558, 559, 745,
             511, 514, 516, 518, 521, 522, 523, 524, 526, 527, 528, 529, 530, 532, 538, 543, 547, 548, 556, 576,
-            58, 59, 60, 68, 69, 70, 72, 74, 75, 322, 332, 341, 342, 343, 345, 349, 351, 355, 356, 384, 385, 387, 402, 1081,
             98, 99, 100, 102, 103, 104, 106, 107, 108, 109, 110, 112, 113, 115, 445, 470, 471, 584, 586, 1107,
             57, 61, 62, 63, 64, 65, 66, 67, 73, 76, 328, 338, 340, 346, 354, 394, 397, 563, 715, 1044
         };
@@ -47,7 +46,8 @@ namespace Sandbox
                 //SeedTeams(client, serviceProvider);
                 //SeedSeasons(client, serviceProvider);
                 //SeedStandings(client, serviceProvider);
-                SeedPlayers(client, serviceProvider);
+                //SeedPlayers(client, serviceProvider);
+                SeedNumberOfGoals(client, serviceProvider);
             }
         }
 
@@ -223,11 +223,12 @@ namespace Sandbox
             var responses = new List<Squad>();
             var counter = 0;
 
+
             foreach (int id in TeamsIds)
             {
                 counter++;
 
-                var response = client.Get2<Squad>("teams/{id}", id);
+                var response = client.Get<Squad>("teams/{id}", id);
 
                 if (counter % 11 == 0)
                 {
@@ -236,8 +237,8 @@ namespace Sandbox
                 }
                 else
                 {
-                    Console.WriteLine($"Added {response.Data.Name}");
-                    responses.Add(response.Data);
+                    Console.WriteLine($"Added {response.Name}");
+                    responses.Add(response);
                 }
             }
 
@@ -249,7 +250,10 @@ namespace Sandbox
                 {
                     var databaseTeam = context.Teams.FirstOrDefault(t => t.Name == name);
 
-                    if (databaseTeam == null) continue;
+                    if (databaseTeam == null)
+                    {
+                        continue;
+                    }
 
                     var player = new FootballApp.Data.DbModels.Player
                     {
@@ -264,6 +268,36 @@ namespace Sandbox
                     };
 
                     context.Players.AddRange(player);
+                }
+            }
+
+            context.SaveChanges();
+        }
+
+        private static void SeedNumberOfGoals(FootballClient client, IServiceProvider serviceProvider)
+        {
+            var context = serviceProvider.GetService<FootballAppContext>();
+
+            var responses = new List<Scorers>();
+
+            foreach (int id in CompetitionsIds)
+            {
+                var response = client.Get<Scorers>("competitions/{id}/scorers", id);
+                responses.Add(response);
+            }
+
+            foreach (Scorers response in responses)
+            {
+                foreach (Scorer responseScorer in response.ScorersCollection)
+                {
+                    var player = context.Players.FirstOrDefault(p => p.Name == responseScorer.Player.Name);
+
+                    if (player == null) continue;
+
+                    player.NumberOfGoals = responseScorer.NumberOfGoals;
+
+                    Console.WriteLine($"{responseScorer.Player.Name} => {responseScorer.NumberOfGoals}");
+                    context.Players.UpdateRange(player);
                 }
             }
 
