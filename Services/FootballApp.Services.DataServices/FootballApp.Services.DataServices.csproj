@@ -1,17 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FootballApp.Services.Models\FootballApp.Services.Models.csproj" />
+    <ProjectReference Include="..\..\Data\FootballApp.Data.DbModels\FootballApp.Data.DbModels.csproj" />
+    <ProjectReference Include="..\..\Data\FootballApp.Data\FootballApp.Data.csproj" />
+    <ProjectReference Include="..\FootballApp.Services.Dtos\FootballApp.Services.Dtos.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.Extensions.Options">
-      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.options\2.2.0\lib\netstandard2.0\Microsoft.Extensions.Options.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.IdentityModel.Tokens">
       <HintPath>C:\Users\VanGog06\.nuget\packages\microsoft.identitymodel.tokens\5.3.0\lib\netstandard2.0\Microsoft.IdentityModel.Tokens.dll</HintPath>
     </Reference>

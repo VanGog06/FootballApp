@@ -1,8 +1,6 @@
-﻿using FootballApp.Services.Models.Common;
-
-namespace FootballApp.Services.Models.Users
+﻿namespace FootballApp.Services.Dtos.Users
 {
-    public class UserViewModel : BaseModel<int>
+    public class UserDto
     {
         public string Username { get; set; }
 

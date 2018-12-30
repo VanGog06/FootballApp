@@ -1,5 +1,6 @@
-﻿using FootballApp.Services.DataServices.Contracts;
-using FootballApp.Services.Models.Users;
+﻿using System;
+using FootballApp.Services.DataServices.Contracts;
+using FootballApp.Services.Dtos.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,9 +20,9 @@ namespace FootballApp.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody] UserViewModel viewModel)
+        public IActionResult Authenticate([FromBody] UsernamePasswordDto usernamePasswordDto)
         {
-            var user = this.userService.Authenticate(viewModel.Username, viewModel.Password);
+            var user = this.userService.Authenticate(usernamePasswordDto);
 
             if (user == null)
             {
@@ -31,7 +32,23 @@ namespace FootballApp.Api.Controllers
             return Ok(user);
         }
 
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] UserDto userDto)
+        {
+            try
+            {
+                this.userService.Create(userDto);
+
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        //[Authorize(Roles = "Admin")]
         public IActionResult GetAll()
         {
             var users = this.userService.GetAll();

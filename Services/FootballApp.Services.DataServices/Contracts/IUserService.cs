@@ -1,12 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using FootballApp.Services.Models.Users;
+﻿using System.Collections.Generic;
+using FootballApp.Services.Dtos.Users;
 
 namespace FootballApp.Services.DataServices.Contracts
 {
     public interface IUserService
     {
-        UserViewModel Authenticate(string username, string password);
-        IEnumerable<UserViewModel> GetAll();
+        UserWithoutPasswordDto Authenticate(UsernamePasswordDto usernamePasswordDto);
+        IEnumerable<UserWithoutPasswordDto> GetAll();
+        UserDto Create(UserDto userDto);
     }
 }

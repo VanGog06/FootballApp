@@ -1,36 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using FootballApp.Api.Helpers;
+using FootballApp.Data;
+using FootballApp.Data.DbModels;
 using FootballApp.Services.DataServices.Contracts;
-using FootballApp.Services.Models.Users;
+using FootballApp.Services.Dtos.Users;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace FootballApp.Services.DataServices
 {
     public class UserService : IUserService
     {
-        private List<UserViewModel> users = new List<UserViewModel>
-        {
-            new UserViewModel {Id = 1, Email = "test@test.com", Password = "TestPassword", Username = "Pesho", FirstName = "Pesho", Lastname = "Peshov" }
-        };
-
+        private readonly FootballAppContext context;
         private readonly AppSettings appSettings;
 
-        public UserService(IOptions<AppSettings> appSettings)
+        public UserService(FootballAppContext context, IOptions<AppSettings> appSettings)
         {
+            this.context = context;
             this.appSettings = appSettings.Value;
         }
 
-        public UserViewModel Authenticate(string username, string password)
+        public UserWithoutPasswordDto Authenticate(UsernamePasswordDto dto)
         {
-            var user = this.users.SingleOrDefault(u => u.Username == username && u.Password == password);
+            var user = this.context.Users.SingleOrDefault(u => u.Username == dto.Username);
 
             if (user == null)
+            {
+                return null;
+            }
+
+            if (!VerifyPasswordHash(dto.Password, user.PasswordHash, user.PasswordSalt))
             {
                 return null;
             }
@@ -52,20 +56,86 @@ namespace FootballApp.Services.DataServices
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.Token = tokenHandler.WriteToken(token);
 
-            user.Password = null;
+            var userDto = new UserWithoutPasswordDto
+            {
+                Email = user.Email,
+                FirstName = user.FirstName,
+                Lastname = user.LastName,
+                Username = user.Username,
+                Token = tokenHandler.WriteToken(token)
+            };
 
-            return user;
+            return userDto;
         }
 
-        public IEnumerable<UserViewModel> GetAll()
+        public IEnumerable<UserWithoutPasswordDto> GetAll()
         {
-            return this.users.Select(u =>
+            return this.context.Users
+                .Select(u => new UserWithoutPasswordDto
+                {
+                    Email = u.Email,
+                    FirstName = u.FirstName,
+                    Lastname = u.LastName,
+                    Username = u.Username
+                });
+        }
+
+        public UserDto Create(UserDto userDto)
+        {
+            if (string.IsNullOrWhiteSpace(userDto.Password))
+                throw new ArgumentException("Password is required");
+
+            if (this.context.Users.Any(x => x.Username == userDto.Username))
+                throw new ArgumentException("Username \"" + userDto.Username + "\" is already taken");
+
+            CreatePasswordHash(userDto.Password, out var passwordHash, out var passwordSalt);
+
+            var user = new User
             {
-                u.Password = null;
-                return u;
-            });
+                Email = userDto.Email,
+                FirstName = userDto.Email,
+                LastName = userDto.Lastname,
+                PasswordHash = passwordHash,
+                PasswordSalt = passwordSalt,
+                Username = userDto.Password
+            };
+
+            this.context.Users.Add(user);
+            this.context.SaveChanges();
+
+            return userDto;
+        }
+
+        private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            if (password == null) throw new ArgumentNullException(nameof(password));
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", nameof(password));
+
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            }
+        }
+
+        private static bool VerifyPasswordHash(string password, byte[] storedHash, byte[] storedSalt)
+        {
+            if (password == null) throw new ArgumentNullException(nameof(password));
+            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", nameof(password));
+            if (storedHash.Length != 64) throw new ArgumentException("Invalid length of password hash (64 bytes expected).", "passwordHash");
+            if (storedSalt.Length != 128) throw new ArgumentException("Invalid length of password salt (128 bytes expected).", "passwordHash");
+
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt))
+            {
+                var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                for (int i = 0; i < computedHash.Length; i++)
+                {
+                    if (computedHash[i] != storedHash[i]) return false;
+                }
+            }
+
+            return true;
         }
     }
 }
