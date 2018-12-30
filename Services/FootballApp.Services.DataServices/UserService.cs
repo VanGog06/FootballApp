@@ -51,7 +51,7 @@ namespace FootballApp.Services.DataServices
                         //new Claim(ClaimTypes.Role, "Admin")
                     }
                 ),
-                Expires = DateTime.UtcNow.AddSeconds(30),
+                Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
@@ -95,7 +95,7 @@ namespace FootballApp.Services.DataServices
             {
                 Email = userDto.Email,
                 FirstName = userDto.Email,
-                LastName = userDto.Lastname,
+                LastName = userDto.LastName,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 Username = userDto.Password
@@ -105,6 +105,51 @@ namespace FootballApp.Services.DataServices
             this.context.SaveChanges();
 
             return userDto;
+        }
+
+        public void Update(UserDto userDto)
+        {
+            var user = this.context.Users.FirstOrDefault(u => u.Username == userDto.Username);
+
+            if (user == null)
+            {
+                throw new ArgumentException("User not found");
+            }
+
+            if (!VerifyPasswordHash(userDto.Password, user.PasswordHash, user.PasswordSalt))
+            {
+                throw new ArgumentException("Wrong username or password");
+            }
+
+            CreatePasswordHash(userDto.Password, out var passwordHash, out var passwordSalt);
+
+            //user.FirstName = userDto.FirstName;
+            //user.LastName = userDto.LastName;
+            //user.Username = userDto.Username;
+            //user.Email = userDto.Email;
+            user.PasswordSalt = passwordSalt;
+            user.PasswordHash = passwordHash;
+
+            this.context.Users.Update(user);
+            this.context.SaveChanges();
+        }
+
+        public void Delete(UsernamePasswordDto dto)
+        {
+            var user = this.context.Users.FirstOrDefault(u => u.Username == dto.Username);
+
+            if (user == null)
+            {
+                throw new ArgumentException("User not found");
+            }
+
+            if (!VerifyPasswordHash(dto.Password, user.PasswordHash, user.PasswordSalt))
+            {
+                throw new ArgumentException("Wrong username or password");
+            }
+
+            this.context.Users.Remove(user);
+            this.context.SaveChanges();
         }
 
         private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

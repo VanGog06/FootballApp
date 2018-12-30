@@ -48,6 +48,36 @@ namespace FootballApp.Api.Controllers
             }
         }
 
+        [HttpPut("update")]
+        public IActionResult Update([FromBody] UserDto userDto)
+        {
+            try
+            {
+                this.userService.Update(userDto);
+
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete("delete")]
+        public IActionResult Delete([FromBody] UsernamePasswordDto dto)
+        {
+            try
+            {
+                this.userService.Delete(dto);
+
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         //[Authorize(Roles = "Admin")]
         public IActionResult GetAll()
         {
