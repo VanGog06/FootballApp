@@ -38,9 +38,9 @@ namespace FootballApp.Api.Controllers
         {
             try
             {
-                this.userService.Create(userDto);
+                var user = this.userService.Create(userDto);
 
-                return Ok();
+                return Ok(user);
             }
             catch (ArgumentException ex)
             {

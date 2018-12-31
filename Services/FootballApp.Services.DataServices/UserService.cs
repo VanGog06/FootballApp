@@ -61,7 +61,7 @@ namespace FootballApp.Services.DataServices
             {
                 Email = user.Email,
                 FirstName = user.FirstName,
-                Lastname = user.LastName,
+                LastName = user.LastName,
                 Username = user.Username,
                 Token = tokenHandler.WriteToken(token)
             };
@@ -76,7 +76,7 @@ namespace FootballApp.Services.DataServices
                 {
                     Email = u.Email,
                     FirstName = u.FirstName,
-                    Lastname = u.LastName,
+                    LastName = u.LastName,
                     Username = u.Username
                 });
         }
