@@ -48,12 +48,13 @@ namespace FootballApp.Api.Controllers
             }
         }
 
-        [HttpPut("update")]
-        public IActionResult Update([FromBody] UserDto userDto)
+        [HttpPut("changePassword/{id}")]
+        public IActionResult ChangePassword(int id, [FromBody] UpdateUserPasswordDto dto)
         {
             try
             {
-                this.userService.Update(userDto);
+                dto.Id = id;
+                this.userService.ChangePassword(dto);
 
                 return Ok();
             }
@@ -63,11 +64,28 @@ namespace FootballApp.Api.Controllers
             }
         }
 
-        [HttpDelete("delete")]
-        public IActionResult Delete([FromBody] UsernamePasswordDto dto)
+        [HttpPut("updateAccount/{id}")]
+        public IActionResult UpdateAccount(int id, [FromBody] UpdateUserAccountDto dto)
         {
             try
             {
+                dto.Id = id;
+                this.userService.UpdateAccountInfo(dto);
+
+                return Ok();
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete("delete/{id}")]
+        public IActionResult Delete(int id, [FromBody] DeleteUserDto dto)
+        {
+            try
+            {
+                dto.Id = id;
                 this.userService.Delete(dto);
 
                 return Ok();

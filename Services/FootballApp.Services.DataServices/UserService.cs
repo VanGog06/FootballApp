@@ -94,7 +94,7 @@ namespace FootballApp.Services.DataServices
             var user = new User
             {
                 Email = userDto.Email,
-                FirstName = userDto.Email,
+                FirstName = userDto.FirstName,
                 LastName = userDto.LastName,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
@@ -107,26 +107,22 @@ namespace FootballApp.Services.DataServices
             return userDto;
         }
 
-        public void Update(UserDto userDto)
+        public void ChangePassword(UpdateUserPasswordDto dto)
         {
-            var user = this.context.Users.FirstOrDefault(u => u.Username == userDto.Username);
+            var user = this.context.Users.Find(dto.Id);
 
             if (user == null)
             {
                 throw new ArgumentException("User not found");
             }
 
-            if (!VerifyPasswordHash(userDto.Password, user.PasswordHash, user.PasswordSalt))
+            if (!VerifyPasswordHash(dto.OldPassword, user.PasswordHash, user.PasswordSalt))
             {
                 throw new ArgumentException("Wrong username or password");
             }
 
-            CreatePasswordHash(userDto.Password, out var passwordHash, out var passwordSalt);
+            CreatePasswordHash(dto.NewPassword, out var passwordHash, out var passwordSalt);
 
-            //user.FirstName = userDto.FirstName;
-            //user.LastName = userDto.LastName;
-            //user.Username = userDto.Username;
-            //user.Email = userDto.Email;
             user.PasswordSalt = passwordSalt;
             user.PasswordHash = passwordHash;
 
@@ -134,9 +130,9 @@ namespace FootballApp.Services.DataServices
             this.context.SaveChanges();
         }
 
-        public void Delete(UsernamePasswordDto dto)
+        public void UpdateAccountInfo(UpdateUserAccountDto dto)
         {
-            var user = this.context.Users.FirstOrDefault(u => u.Username == dto.Username);
+            var user = this.context.Users.Find(dto.Id);
 
             if (user == null)
             {
@@ -146,6 +142,28 @@ namespace FootballApp.Services.DataServices
             if (!VerifyPasswordHash(dto.Password, user.PasswordHash, user.PasswordSalt))
             {
                 throw new ArgumentException("Wrong username or password");
+            }
+
+            user.FirstName = dto.FirstName;
+            user.LastName = dto.LastName;
+            user.Email = dto.Email;
+
+            this.context.Users.Update(user);
+            this.context.SaveChanges();
+        }
+
+        public void Delete(DeleteUserDto dto)
+        {
+            var user = this.context.Users.Find(dto.Id);
+
+            if (user == null)
+            {
+                throw new ArgumentException("User not found");
+            }
+
+            if (!VerifyPasswordHash(dto.Password, user.PasswordHash, user.PasswordSalt))
+            {
+                throw new ArgumentException("Wrong password");
             }
 
             this.context.Users.Remove(user);
