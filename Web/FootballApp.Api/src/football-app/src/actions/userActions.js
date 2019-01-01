@@ -3,24 +3,24 @@ import { userService } from '../services';
 import { alertActions } from './';
 import { history } from '../helpers'
 
+const loginRequest = (user) => { return { type: userConstants.LOGIN_REQUEST, user }};
+const loginSuccess = (user) => { return { type: userConstants.LOGIN_SUCCESS, user }};
+const loginFailure = (error) => { return { type: userConstants.LOGIN_FAILURE, error }};
+
 const login = (username, password) => {
     return dispatch => {
-        dispatch(request({ username }));
+        dispatch(loginRequest({ username }));
 
         userService.login(username, password)
             .then(user => {
-                dispatch(success(user));
+                dispatch(loginSuccess(user));
                 history.push('/');
             },
             error => {
-                dispatch(failure(error.toString()));
+                dispatch(loginFailure(error.toString()));
                 dispatch(alertActions.error(error.toString()));
             });
     };
-
-    function request(user) { return { type: userConstants.LOGIN_REQUEST, user } };
-    function success(user) { return { type: userConstants.LOGIN_SUCCESS, user } };
-    function failure(error) { return { type: userConstants.LOGIN_FAILURE, error } };
 };
 
 const logout = _ => {
@@ -28,60 +28,60 @@ const logout = _ => {
     return { type: userConstants.LOGOUT };
 };
 
+const registerRequest = (user) => { return { type: userConstants.REGISTER_REQUEST, user }};
+const registerSuccess = (user) => { return { type: userConstants.REGISTER_SUCCESS, user }};
+const registerFailure = (error) => { return { type: userConstants.REGISTER_FAILURE, error }};
+
 const register = (user) => {
     return dispatch => {
-        dispatch(request(user));
+        dispatch(registerRequest(user));
 
         userService.register(user)
             .then(user => {
-                dispatch(success(user));
+                dispatch(registerSuccess(user));
                 dispatch(alertActions.success('Registrered successfully'));
             },
             error => {
-                dispatch(failure(error.toString()));
+                dispatch(registerFailure(error.toString()));
                 dispatch(alertActions.error(error.toString()));
             });
     };
-
-    function request(user) { return { type: userConstants.REGISTER_REQUEST, user } };
-    function success(user) { return { type: userConstants.REGISTER_SUCCESS, user } };
-    function failure(error) { return { type: userConstants.REGISTER_FAILURE, error } };
 };
+
+const deleteRequest = (id) => { return { type: userConstants.DELETE_REQUEST, id }};
+const deleteSuccess = (id) => { return { type: userConstants.DELETE_SUCCESS, id }};
+const deleteFailure = (id, error) => { return { type: userConstants.DELETE_FAILURE, id, error }};
 
 const _delete = (id) => {
     return dispatch => {
-        dispatch(request(id));
+        dispatch(deleteRequest(id));
 
         userService.delete(id)
             .then(_ => {
-                dispatch(success(id));
+                dispatch(deleteSuccess(id));
             },
             error => {
-                dispatch(failure(id, error.toString()));
+                dispatch(deleteFailure(id, error.toString()));
             });
     };
-
-    function request(id) { return { type: userConstants.DELETE_REQUEST, id } };
-    function success(id) { return { type: userConstants.DELETE_SUCCESS, id } };
-    function failure(id, error) { return { type: userConstants.DELETE_FAILURE, id, error } };
 };
+
+const getAllRequest = _ => { return { type: userConstants.GETALL_REQUEST }};
+const getAllSuccess = (users) => { return { type: userConstants.GETALL_SUCCESS, users }};
+const getAllFailure = (error) => { return { type: userConstants.GETALL_FAILURE, error }};
 
 const getAll = _ => {
     return dispatch => {
-        dispatch(request());
+        dispatch(getAllRequest());
 
         userService.getAll()
             .then(users => {
-                dispatch(success(users));
+                dispatch(getAllSuccess(users));
             },
             error => {
-                dispatch(failure(error.toString()));
+                dispatch(getAllFailure(error.toString()));
             });
     };
-
-    function request() { return { type: userConstants.GETALL_REQUEST } };
-    function success(users) { return { type: userConstants.GETALL_SUCCESS, users } };
-    function failure(error) { return { type: userConstants.GETALL_FAILURE, error } };
 };
 
 export const userActions = {

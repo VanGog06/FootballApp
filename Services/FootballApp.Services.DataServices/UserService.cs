@@ -59,6 +59,7 @@ namespace FootballApp.Services.DataServices
 
             var userDto = new UserWithoutPasswordDto
             {
+                Id = user.Id,
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -74,6 +75,7 @@ namespace FootballApp.Services.DataServices
             return this.context.Users
                 .Select(u => new UserWithoutPasswordDto
                 {
+                    Id = u.Id,
                     Email = u.Email,
                     FirstName = u.FirstName,
                     LastName = u.LastName,

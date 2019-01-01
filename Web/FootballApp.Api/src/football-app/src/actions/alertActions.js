@@ -5,7 +5,7 @@ const success = (message) => {
 };
 
 const error = (message) => {
-    return { type: alertConstants.ERRROR, message };
+    return { type: alertConstants.ERROR, message };
 };
 
 const clear = _ => {

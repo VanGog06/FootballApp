@@ -10,5 +10,5 @@ export const registration = (state = {}, action) => {
             return {};
         default:
             return state;
-    };
+    }
 };

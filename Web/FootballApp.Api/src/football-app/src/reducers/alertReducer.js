@@ -16,5 +16,5 @@ export const alert = (state = {}, action) => {
             return {};
         default:
             return state;
-    };
+    }
 };

@@ -21,5 +21,5 @@ export const authentication = (state = initialState, action) => {
             return {};
         default: 
             return state;
-    };
+    }
 };
