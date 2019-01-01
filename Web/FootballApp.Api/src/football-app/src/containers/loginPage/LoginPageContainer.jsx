@@ -58,6 +58,7 @@ class LoginPageContainer extends Component {
     render() {
         const { loggingIn } = this.props;
         const { username, password, submitted } = this.state;
+        
         return (
             <LoginPage
                 username={username}
