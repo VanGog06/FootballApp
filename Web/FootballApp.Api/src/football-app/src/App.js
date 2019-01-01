@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
-import { Router, Route } from 'react-router-dom';
+import { Router, Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { Alert } from 'reactstrap';
 
-import { history } from './helpers';
+import { history, routes } from './helpers';
 import { alertActions } from './actions';
 
 import { PrivateRoute } from './components/PrivateRoute';
-import { HomePageContainer } from './containers/homePage/HomePageContainer';
-import { LoginPageContainer } from './containers/loginPage/LoginPageContainer';
-import { RegisterPageContainer } from './containers/registerPage/RegisterPageContainer';
+import { Header } from './components/common';
+import { Footer } from './components/common';
+
+// import { HomePageContainer } from './containers/homePage/HomePageContainer';
+// import { LoginPageContainer } from './containers/loginPage/LoginPageContainer';
+// import { RegisterPageContainer } from './containers/registerPage/RegisterPageContainer';
 
 import './App.css';
 
@@ -20,7 +23,7 @@ class App extends Component {
 
     const { dispatch } = this.props;
     history.listen((location, action) => {
-        dispatch(alertActions.clear());
+      dispatch(alertActions.clear());
     });
 }
 
@@ -28,30 +31,46 @@ class App extends Component {
     const { alert } = this.props;
 
     return (
-      <div className="jumbotron">
-        <div className="container">
-          <div className="col-sm-8 col-sm-offset-2 mx-auto">
-            {alert.message &&
-              <Alert color={alert.type}>
-                {alert.message}
-              </Alert>
-            }
-            <Router history={history}>
-              <div>
-                <PrivateRoute exact path="/" component={HomePageContainer} />
-                <Route path="/login" component={LoginPageContainer} />
-                <Route path="/register" component={RegisterPageContainer} />
+      <Router history={history}>
+        <div>
+          <Header />
+
+          <div className="jumbotron">
+            <div className="container">
+              <div className="col-sm-8 col-sm-offset-2 mx-auto">
+                {alert.message &&
+                  <Alert color={alert.type}>
+                    {alert.message}
+                  </Alert>
+                }
+
+                <Switch>
+                  {routes.map((route, index) => {
+                    return route.path === '/' ? (
+                      <PrivateRoute id={index} {...route} />
+                    ) : (
+                      <Route id={index} {...route} />
+                    )
+                  })}
+                  {/* <PrivateRoute exact path="/" component={HomePageContainer} />
+                  <Route path="/login" component={LoginPageContainer} />
+                  <Route path="/register" component={RegisterPageContainer} />
+                  <Route render={() => <div>404 Not Found!</div>} /> */}
+                </Switch>
               </div>
-            </Router>
+            </div>
           </div>
+
+          <Footer />
         </div>
-      </div>
+      </Router>
     );
   }
 }
 
 function mapStateToProps(state) {
   const { alert } = state;
+
   return {
       alert
   };
