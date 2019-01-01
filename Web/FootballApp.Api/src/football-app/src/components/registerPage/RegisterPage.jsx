@@ -3,43 +3,45 @@ import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
 
+import { appConstants } from '../../constants';
+
 const RegisterPage = ({submitted, registering, user, handleChange, handleSubmit}) => (
     <div className="col-sm-10 offset-sm-1">
         <h2>Register</h2>
         <form name="form" onSubmit={handleSubmit}>
-            <div className={'form-group' + (submitted && !user.username ? ' has-error' : '')}>
+            <div className={'form-group' + (submitted && user.username.length < appConstants.usernameMinLength ? ' has-error' : '')}>
                 <label htmlFor="username">Username</label>
                 <input type="text" className="form-control" name="username" value={user.username} onChange={handleChange} />
-                {submitted && !user.username &&
-                    <div className="help-block">Username is required</div>
+                {submitted && user.username.length < appConstants.usernameMinLength &&
+                    <div className="error-block">{appConstants.errors.username}</div>
                 }
             </div>
-            <div className={'form-group' + (submitted && !user.password ? ' has-error' : '')}>
+            <div className={'form-group' + (submitted && user.password.length < appConstants.passwordMinLength ? ' has-error' : '')}>
                 <label htmlFor="password">Password</label>
                 <input type="password" className="form-control" name="password" value={user.password} onChange={handleChange} />
-                {submitted && !user.password &&
-                    <div className="help-block">Password is required</div>
+                {submitted && user.password.length < appConstants.passwordMinLength &&
+                    <div className="error-block">{appConstants.errors.password}</div>
                 }
             </div>
             <div className={'form-group' + (submitted && !user.firstName ? ' has-error' : '')}>
                 <label htmlFor="firstName">First Name</label>
                 <input type="text" className="form-control" name="firstName" value={user.firstName} onChange={handleChange} />
                 {submitted && !user.firstName &&
-                    <div className="help-block">First Name is required</div>
+                    <div className="error-block">{appConstants.errors.firstName}</div>
                 }
             </div>
             <div className={'form-group' + (submitted && !user.lastName ? ' has-error' : '')}>
                 <label htmlFor="lastName">Last Name</label>
                 <input type="text" className="form-control" name="lastName" value={user.lastName} onChange={handleChange} />
                 {submitted && !user.lastName &&
-                    <div className="help-block">Last Name is required</div>
+                    <div className="error-block">{appConstants.errors.lastName}</div>
                 }
             </div>
-            <div className={'form-group' + (submitted && !user.email ? ' has-error' : '')}>
+            <div className={'form-group' + (submitted && !appConstants.emailRegex.test(user.email.toLowerCase()) ? ' has-error' : '')}>
                 <label htmlFor="email">Email</label>
                 <input type="email" className="form-control" name="email" value={user.email} onChange={handleChange} />
-                {submitted && !user.email &&
-                    <div className="help-block">Email is required</div>
+                {submitted && !appConstants.emailRegex.test(user.email.toLowerCase()) &&
+                    <div className="error-block">{appConstants.errors.email}</div>
                 }
             </div>
             <div className="form-group">
@@ -55,9 +57,9 @@ const RegisterPage = ({submitted, registering, user, handleChange, handleSubmit}
 
 RegisterPage.propTypes = {
     submitted: PropTypes.bool.isRequired,
-    registering: PropTypes.bool.isRequired,
+    registering: PropTypes.bool,
     user: PropTypes.shape({
-        userName: PropTypes.string.isRequired,
+        username: PropTypes.string.isRequired,
         password: PropTypes.string.isRequired,
         firstName: PropTypes.string.isRequired,
         lastName: PropTypes.string.isRequired,

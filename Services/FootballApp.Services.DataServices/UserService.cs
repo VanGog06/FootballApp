@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using FootballApp.Api.Helpers;
+using FootballApp.Common;
 using FootballApp.Data;
 using FootballApp.Data.DbModels;
 using FootballApp.Services.DataServices.Contracts;
@@ -85,11 +86,8 @@ namespace FootballApp.Services.DataServices
 
         public UserDto Create(UserDto userDto)
         {
-            if (string.IsNullOrWhiteSpace(userDto.Password))
-                throw new ArgumentException("Password is required");
-
             if (this.context.Users.Any(x => x.Username == userDto.Username))
-                throw new ArgumentException("Username \"" + userDto.Username + "\" is already taken");
+                throw new ArgumentException(GlobalConstants.UsernameTaken);
 
             CreatePasswordHash(userDto.Password, out var passwordHash, out var passwordSalt);
 
@@ -115,12 +113,12 @@ namespace FootballApp.Services.DataServices
 
             if (user == null)
             {
-                throw new ArgumentException("User not found");
+                throw new ArgumentException(GlobalConstants.UserNotFound);
             }
 
             if (!VerifyPasswordHash(dto.OldPassword, user.PasswordHash, user.PasswordSalt))
             {
-                throw new ArgumentException("Wrong username or password");
+                throw new ArgumentException(GlobalConstants.IncorrectUsernamePassword);
             }
 
             CreatePasswordHash(dto.NewPassword, out var passwordHash, out var passwordSalt);
@@ -138,12 +136,12 @@ namespace FootballApp.Services.DataServices
 
             if (user == null)
             {
-                throw new ArgumentException("User not found");
+                throw new ArgumentException(GlobalConstants.UserNotFound);
             }
 
             if (!VerifyPasswordHash(dto.Password, user.PasswordHash, user.PasswordSalt))
             {
-                throw new ArgumentException("Wrong username or password");
+                throw new ArgumentException(GlobalConstants.IncorrectUsernamePassword);
             }
 
             user.FirstName = dto.FirstName;
@@ -160,12 +158,12 @@ namespace FootballApp.Services.DataServices
 
             if (user == null)
             {
-                throw new ArgumentException("User not found");
+                throw new ArgumentException(GlobalConstants.UserNotFound);
             }
 
             if (!VerifyPasswordHash(dto.Password, user.PasswordHash, user.PasswordSalt))
             {
-                throw new ArgumentException("Wrong password");
+                throw new ArgumentException(GlobalConstants.IncorrectPassword);
             }
 
             this.context.Users.Remove(user);

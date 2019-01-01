@@ -1,4 +1,5 @@
 ﻿using System;
+using FootballApp.Common;
 using FootballApp.Services.DataServices.Contracts;
 using FootballApp.Services.Dtos.Users;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +12,7 @@ namespace FootballApp.Api.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private IUserService userService;
+        private readonly IUserService userService;
 
         public UsersController(IUserService userService)
         {
@@ -22,11 +23,16 @@ namespace FootballApp.Api.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody] UsernamePasswordDto usernamePasswordDto)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return BadRequest(this.ModelState);
+            }
+
             var user = this.userService.Authenticate(usernamePasswordDto);
 
             if (user == null)
             {
-                return BadRequest(new {message = "Username or password is incorrect!"});
+                return BadRequest(new {message = GlobalConstants.IncorrectUsernamePassword});
             }
 
             return Ok(user);
@@ -36,6 +42,11 @@ namespace FootballApp.Api.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody] UserDto userDto)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return BadRequest(this.ModelState);
+            }
+
             try
             {
                 var user = this.userService.Create(userDto);

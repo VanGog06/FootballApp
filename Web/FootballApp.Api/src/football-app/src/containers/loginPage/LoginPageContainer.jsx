@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import { userActions } from '../../actions';
 
+import { appConstants } from '../../constants';
+
 import LoginPage from '../../components/loginPage/LoginPage';
 
 class LoginPageContainer extends Component {
@@ -19,6 +21,20 @@ class LoginPageContainer extends Component {
         };
     }
 
+    validateInput = _ => {
+        const { username, password } = this.state;
+
+        if (username.length < appConstants.usernameMinLength) {
+            return false;
+        }
+
+        if (password.length < appConstants.passwordMinLength) {
+            return false;
+        }
+
+        return true;
+    }
+
     handleChange = (e) => {
         const { name, value } = e.target;
         this.setState({ [name]: value });
@@ -31,7 +47,10 @@ class LoginPageContainer extends Component {
 
         const { username, password } = this.state;
         const { dispatch } = this.props;
-        if (username && password) {
+
+        const isFormValid = this.validateInput();
+
+        if (isFormValid) {
             dispatch(userActions.login(username, password));
         }
     }
@@ -52,11 +71,11 @@ class LoginPageContainer extends Component {
     }
 }
 
-const  mapStateToProps = (state) => {
+const mapStateToProps = (state) => {
     const { loggingIn } = state.authentication;
 
     return { loggingIn };
-}
+};
 
 const connectedLoginPage = connect(mapStateToProps)(LoginPageContainer);
 

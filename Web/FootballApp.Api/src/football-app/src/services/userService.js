@@ -66,7 +66,17 @@ const handleResponse = (response) => {
                 window.location.reload(true);
             }
 
-            const error = (data && data.message) || response.statusText;
+            let serverErrors = '';
+
+            if (data.errors) {
+                Object.keys(data.errors).forEach(key => {
+                    serverErrors += `${data.errors[key]}`;
+                });
+            } else if (data.message) {
+                serverErrors = data.message;
+            }
+
+            const error = serverErrors || response.statusText;
             return Promise.reject(error);
         }
 

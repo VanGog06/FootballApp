@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\FootballApp.Common\FootballApp.Common.csproj" />
     <ProjectReference Include="..\..\Data\FootballApp.Data.DbModels\FootballApp.Data.DbModels.csproj" />
     <ProjectReference Include="..\..\Data\FootballApp.Data\FootballApp.Data.csproj" />
     <ProjectReference Include="..\FootballApp.Services.Dtos\FootballApp.Services.Dtos.csproj" />

@@ -35,18 +35,18 @@ HomePage.propTypes = {
         id: PropTypes.number.isRequired,
         firstName: PropTypes.string.isRequired,
         lastName: PropTypes.string.isRequired,
-        deleting: PropTypes.bool.isRequired,
+        deleting: PropTypes.bool,
         deleteError: PropTypes.string
     }),
     users: PropTypes.shape({
-        loading: PropTypes.bool.isRequired,
-        error: PropTypes.bool.isRequired,
+        loading: PropTypes.bool,
+        error: PropTypes.bool,
         items: PropTypes.arrayOf(
             PropTypes.shape({
                 id: PropTypes.number.isRequired,
                 firstName: PropTypes.string.isRequired,
                 lastName: PropTypes.string.isRequired,
-                deleting: PropTypes.bool.isRequired,
+                deleting: PropTypes.bool,
                 deleteError: PropTypes.string
             }).isRequired
         )

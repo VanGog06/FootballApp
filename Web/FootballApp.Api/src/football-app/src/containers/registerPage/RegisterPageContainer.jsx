@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import { userActions } from '../../actions';
 
+import { appConstants } from '../../constants';
+
 import RegisterPage from '../../components/registerPage/RegisterPage';
 
 class RegisterPageContainer extends Component {
@@ -14,10 +16,29 @@ class RegisterPageContainer extends Component {
                 firstName: '',
                 lastName: '',
                 username: '',
-                password: ''
+                password: '',
+                email: ''
             },
             submitted: false
         };
+    }
+
+    validateInput = _ => {
+        const { user } = this.state;
+
+        if (user.username.length < appConstants.usernameMinLength) {
+            return false;
+        }
+
+        if (user.password.length < appConstants.passwordMinLength) {
+            return false;
+        }
+
+        if (!appConstants.emailRegex.test(user.email.toLowerCase())) {
+            return false;
+        }
+
+        return true;
     }
 
     handleChange = (event) => {
@@ -39,7 +60,9 @@ class RegisterPageContainer extends Component {
         const { user } = this.state;
         const { dispatch } = this.props;
 
-        if (user.firstName && user.lastName && user.username && user.password && user.email) {
+        const isFormValid = this.validateInput();
+
+        if (isFormValid) {
             dispatch(userActions.register(user));
         }
     }

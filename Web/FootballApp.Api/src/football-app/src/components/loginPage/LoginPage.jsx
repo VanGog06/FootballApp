@@ -3,22 +3,24 @@ import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
 
+import { appConstants } from '../../constants';
+
 const LoginPage = ({username, password, submitted, loggingIn, handleChange, handleSubmit}) => (
     <div className="col-sm-10 offset-sm-1">
         <h2>Login</h2>
         <form name="form" onSubmit={handleSubmit}>
-            <div className={'form-group' + (submitted && !username ? ' has-error' : '')}>
+            <div className={'form-group' + (submitted && username.length < appConstants.usernameMinLength ? ' has-error' : '')}>
                 <label htmlFor="username">Username</label>
                 <input type="text" className="form-control" name="username" value={username} onChange={handleChange} />
-                {submitted && !username &&
-                    <div className="help-block">Username is required</div>
+                {submitted && username.length < appConstants.usernameMinLength &&
+                    <div className="error-block">{appConstants.errors.username}</div>
                 }
             </div>
-            <div className={'form-group' + (submitted && !password ? ' has-error' : '')}>
+            <div className={'form-group' + (submitted && password.length < appConstants.passwordMinLength ? ' has-error' : '')}>
                 <label htmlFor="password">Password</label>
                 <input type="password" className="form-control" name="password" value={password} onChange={handleChange} />
-                {submitted && !password &&
-                    <div className="help-block">Password is required</div>
+                {submitted && password.length < appConstants.passwordMinLength &&
+                    <div className="error-block">{appConstants.errors.password}</div>
                 }
             </div>
             <div className="form-group">
@@ -36,7 +38,7 @@ LoginPage.propTypes = {
     username: PropTypes.string.isRequired,
     password: PropTypes.string.isRequired,
     submitted: PropTypes.bool.isRequired,
-    logginIn: PropTypes.bool.isRequired,
+    loggingIn: PropTypes.bool,
     handleChange: PropTypes.func.isRequired,
     handleSubmit: PropTypes.func.isRequired
 };
