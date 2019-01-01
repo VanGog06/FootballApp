@@ -2,12 +2,15 @@ import React, { Component } from 'react';
 import { Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { Alert } from 'reactstrap';
+
 import { history } from './helpers';
 import { alertActions } from './actions';
+
 import { PrivateRoute } from './components/PrivateRoute';
-import { HomePage } from './components/homePage/HomePage';
-import { LoginPage } from './components/loginPage/LoginPage';
-import { RegisterPage } from './components/registerPage/RegisterPage'
+import { HomePageContainer } from './containers/homePage/HomePageContainer';
+import { LoginPageContainer } from './containers/loginPage/LoginPageContainer';
+import { RegisterPageContainer } from './containers/registerPage/RegisterPageContainer';
 
 import './App.css';
 
@@ -27,15 +30,17 @@ class App extends Component {
     return (
       <div className="jumbotron">
         <div className="container">
-          <div className="col-sm-8 col-sm-offset-2">
+          <div className="col-sm-8 col-sm-offset-2 mx-auto">
             {alert.message &&
-              <div className={`alert ${alert.type}`}>{alert.message}</div>
+              <Alert color={alert.type}>
+                {alert.message}
+              </Alert>
             }
             <Router history={history}>
               <div>
-                <PrivateRoute exact path="/" component={HomePage} />
-                <Route path="/login" component={LoginPage} />
-                <Route path="/register" component={RegisterPage} />
+                <PrivateRoute exact path="/" component={HomePageContainer} />
+                <Route path="/login" component={LoginPageContainer} />
+                <Route path="/register" component={RegisterPageContainer} />
               </div>
             </Router>
           </div>
