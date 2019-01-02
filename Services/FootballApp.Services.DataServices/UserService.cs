@@ -121,6 +121,11 @@ namespace FootballApp.Services.DataServices
                 throw new ArgumentException(GlobalConstants.IncorrectUsernamePassword);
             }
 
+            if (dto.OldPassword == dto.NewPassword)
+            {
+                throw new ArgumentException(GlobalConstants.PasswordsMatch);
+            }
+
             CreatePasswordHash(dto.NewPassword, out var passwordHash, out var passwordSalt);
 
             user.PasswordSalt = passwordSalt;
