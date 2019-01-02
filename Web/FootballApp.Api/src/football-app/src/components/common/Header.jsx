@@ -9,6 +9,7 @@ import {
   NavItem
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 class Header extends Component {
     constructor(props) {
@@ -27,47 +28,50 @@ class Header extends Component {
         const { loggedIn } = this.props;
 
         return (
-          <div>
-            <Navbar color="light" light expand="md">
-                <NavbarBrand href="/">FootballApp</NavbarBrand>
-                <NavbarToggler onClick={this.toggle} />
-                <Collapse isOpen={this.state.isOpen} navbar>
-                    <Nav className="ml-auto" navbar>
-                        {loggedIn ? (
-                            <React.Fragment>
-                                <NavItem className="navLink">
-                                    <NavLink to="/">Home</NavLink>
-                                </NavItem>
-                                <NavItem className="navLink">
-                                    <NavLink to="/login">Logout</NavLink>
-                                </NavItem>
-                            </React.Fragment>
-                        ) : (
-                            <React.Fragment>
-                                <NavItem className="navLink">
-                                    <NavLink to="/login">Login</NavLink>
-                                </NavItem>
-                                <NavItem className="navLink">
-                                    <NavLink to="/register">Register</NavLink>
-                                </NavItem>
-                            </React.Fragment>
-                        )}
-                    </Nav>
-                </Collapse>
-            </Navbar>
-          </div>
+            <header>
+                <Navbar color="light" light expand="md">
+                    <NavbarBrand href="/">FootballApp</NavbarBrand>
+                    <NavbarToggler onClick={this.toggle} />
+                    <Collapse isOpen={this.state.isOpen} navbar>
+                        <Nav className="ml-auto" navbar>
+                            {loggedIn ? (
+                                <React.Fragment>
+                                    <NavItem className="navLink">
+                                        <NavLink to="/">Home</NavLink>
+                                    </NavItem>
+                                    <NavItem className="navLink">
+                                        <NavLink to="/profile">Profile</NavLink>
+                                    </NavItem>
+                                    <NavItem className="navLink">
+                                        <NavLink to="/login">Logout</NavLink>
+                                    </NavItem>
+                                </React.Fragment>
+                            ) : (
+                                <React.Fragment>
+                                    <NavItem className="navLink">
+                                        <NavLink to="/login">Login</NavLink>
+                                    </NavItem>
+                                    <NavItem className="navLink">
+                                        <NavLink to="/register">Register</NavLink>
+                                    </NavItem>
+                                </React.Fragment>
+                            )}
+                        </Nav>
+                    </Collapse>
+                </Navbar>
+            </header>
         );
     }
 }
 
-const mapStateToProps = state => {
-    const { authentication } = state;
-    const { loggedIn, user } = authentication;
+Header.propTypes = {
+    loggedId: PropTypes.bool,
+};
 
-    return {
-        loggedIn,
-        user
-    };
+const mapStateToProps = state => {
+    const { loggedIn } = state.authentication;
+
+    return { loggedIn };
 };
 
 const connectedHeader = connect(mapStateToProps)(Header);

@@ -35,31 +35,29 @@ class App extends Component {
         <div>
           <Header />
 
-          <div className="jumbotron">
-            <div className="container">
-              <div className="col-sm-8 col-sm-offset-2 mx-auto">
-                {alert.message &&
-                  <Alert color={alert.type}>
-                    {alert.message}
-                  </Alert>
-                }
+          <hr />
 
-                <Switch>
-                  {routes.map((route, index) => {
-                    return route.path === '/' ? (
-                      <PrivateRoute id={index} {...route} />
-                    ) : (
-                      <Route id={index} {...route} />
-                    )
-                  })}
-                  {/* <PrivateRoute exact path="/" component={HomePageContainer} />
-                  <Route path="/login" component={LoginPageContainer} />
-                  <Route path="/register" component={RegisterPageContainer} />
-                  <Route render={() => <div>404 Not Found!</div>} /> */}
-                </Switch>
-              </div>
+          <div className="container-fluid bg-light">
+            <div className="col-sm-12 mx-auto">
+              {alert.message &&
+                <Alert color={alert.type}>
+                  {alert.message}
+                </Alert>
+              }
+
+              <Switch>
+                {routes.map((route, index) => {
+                  return route.isPrivate ? (
+                    <PrivateRoute key={index} {...route} />
+                  ) : (
+                    <Route key={index} {...route} />
+                  )
+                })}
+              </Switch>
             </div>
           </div>
+
+          <hr />
 
           <Footer />
         </div>
