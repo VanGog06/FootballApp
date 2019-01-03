@@ -1,4 +1,4 @@
-import { userConstants } from '../constants';
+import { userConstants, appConstants } from '../constants';
 import { userService } from '../services';
 import { alertActions } from './';
 import { history } from '../helpers'
@@ -67,8 +67,8 @@ const _delete = (id) => {
 };
 
 const getAllRequest = _ => { return { type: userConstants.GETALL_REQUEST }};
-const getAllSuccess = (users) => { return { type: userConstants.GETALL_SUCCESS, users }};
-const getAllFailure = (error) => { return { type: userConstants.GETALL_FAILURE, error }};
+const getAllSuccess = users => { return { type: userConstants.GETALL_SUCCESS, users }};
+const getAllFailure = error => { return { type: userConstants.GETALL_FAILURE, error }};
 
 const getAll = _ => {
     return dispatch => {
@@ -84,10 +84,31 @@ const getAll = _ => {
     };
 };
 
+const changePasswordRequest = _ => { return { type: userConstants.CHANGE_PASSWORD_REQUEST }};
+const changePasswordSuccess = _ => { return { type: userConstants.CHANGE_PASSWORD_SUCCESS }};
+const changePasswordFailure = error => { return { type: userConstants.CHANGE_PASSWORD_FAILURE, error }};
+
+const changePassword = (id, oldPassword, newPassword) => {
+    return dispatch => {
+        dispatch(changePasswordRequest());
+
+        userService.changePassword(id, oldPassword, newPassword)
+            .then(_ => {
+                dispatch(changePasswordSuccess());
+                dispatch(alertActions.success(appConstants.changedPassword))
+            },
+            error => {
+                dispatch(changePasswordFailure(error.toString()));
+                dispatch(alertActions.error(error.toString()));
+            });
+    };
+};
+
 export const userActions = {
     login,
     logout,
     register,
     delete: _delete,
-    getAll
+    getAll,
+    changePassword
 };

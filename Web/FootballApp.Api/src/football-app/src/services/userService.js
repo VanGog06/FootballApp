@@ -46,13 +46,27 @@ const _delete = (id) => {
         .then(handleResponse);
 }
 
-const getAll = () => {
+const getAll = _ => {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
 
     return fetch(`${appConstants.apiUrl}/users`, requestOptions)
+        .then(handleResponse);
+}
+
+const changePassword = (id, oldPassword, newPassword) => {
+    const requestOptions = {
+        method: 'PUT',
+        headers: authHeader(),
+        body: JSON.stringify({
+            oldPassword,
+            newPassword
+        })
+    };
+
+    return fetch(`${appConstants.apiUrl}/users/changePassword/${id}`, requestOptions)
         .then(handleResponse);
 }
 
@@ -89,5 +103,6 @@ export const userService = {
     register,
     logout,
     getAll,
-    delete: _delete
+    delete: _delete,
+    changePassword
 };

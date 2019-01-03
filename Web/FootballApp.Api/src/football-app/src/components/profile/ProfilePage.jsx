@@ -19,6 +19,7 @@ import {
 } from './';
 
 import { appConstants } from '../../constants';
+import { userActions } from '../../actions';
 
 class ProfilePage extends Component {
     constructor(props) {
@@ -47,7 +48,6 @@ class ProfilePage extends Component {
 
     validateChangePasswordInput = _ => {
         const { oldPassword, newPassword } = this.state;
-        const { dispatch } = this.props;
 
         if (oldPassword.length < appConstants.passwordMinLength) {
             return false;
@@ -67,13 +67,16 @@ class ProfilePage extends Component {
 
         const isFormValid = this.validateChangePasswordInput();
 
+        const { dispatch, user } = this.props;
+        const { oldPassword, newPassword  } = this.state;
+
         if (isFormValid) {
-            // TODO: Dispatch change password
+            dispatch(userActions.changePassword(user.id, oldPassword, newPassword));
         }
     }
 
     render() {
-        const { user } = this.props;
+        const { user, changingPassword, changePasswordError } = this.props;
         const { changePasswordSubmitted, oldPassword, newPassword  } = this.state;
 
         return (
@@ -130,7 +133,8 @@ class ProfilePage extends Component {
                                 <Row>
                                     <Col sm="12">
                                         <ChangePassword
-                                            changing={false}
+                                            changing={changingPassword}
+                                            changePasswordError={changePasswordError}
                                             submitted={changePasswordSubmitted}
                                             username={user.username}
                                             oldPassword={oldPassword}
@@ -176,10 +180,9 @@ ProfilePage.propTypes = {
 };
 
 const mapStateToProps = state => {
-    const { user } = state.authentication;
-    // TODO: add changingPassword variable to reducer.
+    const { user, changingPassword, changePasswordError } = state.authentication;
 
-    return { user };
+    return { user, changingPassword, changePasswordError };
 };
 
 const connectedProfilePage = connect(mapStateToProps)(ProfilePage);

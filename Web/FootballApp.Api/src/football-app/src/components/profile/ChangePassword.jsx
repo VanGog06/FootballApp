@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { appConstants } from '../../constants';
 
-const ChangePassword = ({ changing, submitted, username, oldPassword, newPassword, handleChange, handleSubmit}) => (
+const ChangePassword = ({ changing, changePasswordError, submitted, username, oldPassword, newPassword, handleChange, handleSubmit}) => (
     <React.Fragment>
         <h2>Change password</h2>
         <form name="form" onSubmit={handleSubmit}>
@@ -37,6 +37,7 @@ const ChangePassword = ({ changing, submitted, username, oldPassword, newPasswor
 
 ChangePassword.propTypes = {
     changing: PropTypes.bool,
+    changePasswordError: PropTypes.string,
     submitted: PropTypes.bool.isRequired,
     username: PropTypes.string.isRequired,
     oldPassword: PropTypes.string.isRequired,

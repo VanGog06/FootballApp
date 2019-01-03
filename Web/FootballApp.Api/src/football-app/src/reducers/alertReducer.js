@@ -4,7 +4,7 @@ export const alert = (state = {}, action) => {
     switch(action.type) {
         case alertConstants.SUCCESS:
             return {
-                type: 'succcess',
+                type: 'success',
                 message: action.message
             };
         case alertConstants.ERROR:

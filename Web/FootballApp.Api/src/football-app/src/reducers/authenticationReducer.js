@@ -19,6 +19,12 @@ export const authentication = (state = initialState, action) => {
             return {};
         case userConstants.LOGOUT:
             return {};
+        case userConstants.CHANGE_PASSWORD_REQUEST:
+            return { ...state, changingPassword: true };
+        case userConstants.CHANGE_PASSWORD_SUCCESS:
+            return { ...state, changingPassword: false };
+        case userConstants.CHANGE_PASSWORD_FAILURE:
+            return { ...state, changingPassword: false, changePasswordError: action.error };
         default: 
             return state;
     }
