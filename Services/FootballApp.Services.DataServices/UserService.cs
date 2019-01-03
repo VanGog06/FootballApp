@@ -42,15 +42,19 @@ namespace FootballApp.Services.DataServices
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(this.appSettings.Secret);
+
+            var claims = new Claim[]
+            {
+                new Claim(ClaimTypes.Name, user.Id.ToString())
+            };
+
+            claims = claims.Concat(user.Roles.Select(r => new Claim(ClaimTypes.Role, r.Role.Name))).ToArray();
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity
                 (
-                    new Claim[]
-                    {
-                        new Claim(ClaimTypes.Name, user.Id.ToString()),
-                        //new Claim(ClaimTypes.Role, "Admin")
-                    }
+                    claims
                 ),
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -91,6 +95,8 @@ namespace FootballApp.Services.DataServices
 
             CreatePasswordHash(userDto.Password, out var passwordHash, out var passwordSalt);
 
+            var userRole = this.context.Roles.FirstOrDefault(ur => ur.Name == "User");
+
             var user = new User
             {
                 Email = userDto.Email,
@@ -98,7 +104,8 @@ namespace FootballApp.Services.DataServices
                 LastName = userDto.LastName,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
-                Username = userDto.Password
+                Username = userDto.Password,
+                Roles = new List<UserRole> { new UserRole { RoleId = userRole.Id } }
             };
 
             this.context.Users.Add(user);

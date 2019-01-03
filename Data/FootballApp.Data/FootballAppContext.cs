@@ -22,11 +22,15 @@ namespace FootballApp.Data
 
         public DbSet<Player> Players { get; set; }
 
+        public DbSet<Role> Roles { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<Player>()
                 .Property(p => p.NumberOfGoals)
                 .HasDefaultValue(0);
+
+            builder.Entity<UserRole>().HasKey(ur => new { ur.UserId, ur.RoleId });
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
