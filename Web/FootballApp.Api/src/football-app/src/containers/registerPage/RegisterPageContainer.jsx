@@ -34,6 +34,10 @@ class RegisterPageContainer extends Component {
             return false;
         }
 
+        if (!user.firstName || !user.lastName) {
+            return false;
+        }
+
         if (!appConstants.emailRegex.test(user.email.toLowerCase())) {
             return false;
         }

@@ -15,11 +15,12 @@ import classnames from 'classnames';
 
 import { 
     AccountDetails,
-    ChangePassword
+    ChangePassword,
+    UpdateAccount
 } from './';
 
 import { appConstants } from '../../constants';
-import { userActions } from '../../actions';
+import { userActions, alertActions } from '../../actions';
 
 class ProfilePage extends Component {
     constructor(props) {
@@ -30,7 +31,15 @@ class ProfilePage extends Component {
             changePasswordSubmitted: false,
             changePasswordChanging: false,
             oldPassword: '',
-            newPassword: ''
+            newPassword: '',
+            updateAccount: {
+                submitted: false,
+                username: props.user.username,
+                password: '',
+                firstName: props.user.firstName,
+                lastName: props.user.lastName,
+                email: props.user.email
+            }
         };
     }
 
@@ -44,6 +53,15 @@ class ProfilePage extends Component {
         const { name, value } = event.target;
 
         this.setState({ [name]: value });
+    }
+
+    handleUpdateAccountChange = event => {
+        const { name, value } = event.target;
+
+        this.setState({ updateAccount: {
+            ...this.state.updateAccount,
+            [name]: value 
+        }});
     }
 
     validateChangePasswordInput = _ => {
@@ -62,22 +80,60 @@ class ProfilePage extends Component {
 
     handleChangePageSubmit = event => {
         event.preventDefault();
+        const { dispatch, user } = this.props;
+        const { oldPassword, newPassword  } = this.state;
+
+        dispatch(alertActions.clear());
 
         this.setState({ changePasswordSubmitted: true });
 
         const isFormValid = this.validateChangePasswordInput();
-
-        const { dispatch, user } = this.props;
-        const { oldPassword, newPassword  } = this.state;
 
         if (isFormValid) {
             dispatch(userActions.changePassword(user.id, oldPassword, newPassword));
         }
     }
 
+    validateUpdateAccountSubmit = _ => {
+        const { password, firstName, lastName, email } = this.state.updateAccount;
+
+        if (password.length < appConstants.passwordMinLength) {
+            return false;
+        }
+
+        if (!firstName || !lastName) {
+            return false;
+        }
+
+        if (!appConstants.emailRegex.test(email.toLowerCase())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    handleUpdateAccountSubmit = event => {
+        event.preventDefault();
+        const { dispatch, user } = this.props;
+        const { updateAccount } = this.state;
+
+        dispatch(alertActions.clear());
+
+        this.setState({ updateAccount: {
+            ...this.state.updateAccount,
+            submitted: true 
+        }});
+
+        const isFormValid = this.validateUpdateAccountSubmit();
+
+        if (isFormValid) {
+            dispatch(userActions.updateAccount(user.id, updateAccount));
+        }
+    }
+
     render() {
-        const { user, changingPassword, changePasswordError } = this.props;
-        const { changePasswordSubmitted, oldPassword, newPassword  } = this.state;
+        const { user, changingPassword, updatingAccount } = this.props;
+        const { changePasswordSubmitted, oldPassword, newPassword, updateAccount  } = this.state;
 
         return (
             <Container>
@@ -134,7 +190,6 @@ class ProfilePage extends Component {
                                     <Col sm="12">
                                         <ChangePassword
                                             changing={changingPassword}
-                                            changePasswordError={changePasswordError}
                                             submitted={changePasswordSubmitted}
                                             username={user.username}
                                             oldPassword={oldPassword}
@@ -149,7 +204,13 @@ class ProfilePage extends Component {
                             <TabPane tabId="3">
                                 <Row>
                                     <Col sm="12">
-                                        <h4>Tab 3 Contents</h4>
+                                        <UpdateAccount
+                                            changing={updatingAccount}
+                                            submitted={updateAccount.submitted}
+                                            user={updateAccount}
+                                            handleChange={this.handleUpdateAccountChange}
+                                            handleSubmit={this.handleUpdateAccountSubmit}
+                                        />
                                     </Col>
                                 </Row>
                             </TabPane>
@@ -176,13 +237,15 @@ ProfilePage.propTypes = {
         lastName: PropTypes.string.isRequired,
         deleting: PropTypes.bool,
         deleteError: PropTypes.string
-    })
+    }),
+    updatingAccount: PropTypes.bool,
+    changingPassword: PropTypes.bool
 };
 
 const mapStateToProps = state => {
-    const { user, changingPassword, changePasswordError } = state.authentication;
+    const { user, changingPassword, updatingAccount } = state.authentication;
 
-    return { user, changingPassword, changePasswordError };
+    return { user, changingPassword, updatingAccount };
 };
 
 const connectedProfilePage = connect(mapStateToProps)(ProfilePage);

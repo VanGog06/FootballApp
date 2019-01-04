@@ -70,6 +70,29 @@ const changePassword = (id, oldPassword, newPassword) => {
         .then(handleResponse);
 }
 
+const updateAccount = (id, password, firstName, lastName, email) => {
+    const requestOptions = {
+        method: 'PUT',
+        headers: authHeader(),
+        body: JSON.stringify({
+            password,
+            firstName,
+            lastName,
+            email
+        })
+    };
+
+    return fetch(`${appConstants.apiUrl}/users/updateAccount/${id}`, requestOptions)
+        .then(handleResponse)
+        .then(user => {
+            if (user.token) {
+                localStorage.setItem('user', JSON.stringify(user));
+            }
+
+            return user;
+        });
+}
+
 const handleResponse = (response) => {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
@@ -104,5 +127,6 @@ export const userService = {
     logout,
     getAll,
     delete: _delete,
-    changePassword
+    changePassword,
+    updateAccount
 };

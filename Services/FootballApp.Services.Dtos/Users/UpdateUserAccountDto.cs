@@ -11,8 +11,10 @@ namespace FootballApp.Services.Dtos.Users
         [MinLength(4)]
         public string Password { get; set; }
 
+        [Required]
         public string FirstName { get; set; }
 
+        [Required]
         public string LastName { get; set; }
 
         [EmailAddress]

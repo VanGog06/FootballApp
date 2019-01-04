@@ -81,9 +81,9 @@ namespace FootballApp.Api.Controllers
             try
             {
                 dto.Id = id;
-                this.userService.UpdateAccountInfo(dto);
+                var user = this.userService.UpdateAccountInfo(dto);
 
-                return Ok();
+                return Ok(user);
             }
             catch (ArgumentException ex)
             {

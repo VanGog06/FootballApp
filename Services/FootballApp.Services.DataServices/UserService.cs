@@ -142,7 +142,7 @@ namespace FootballApp.Services.DataServices
             this.context.SaveChanges();
         }
 
-        public void UpdateAccountInfo(UpdateUserAccountDto dto)
+        public UserWithoutPasswordDto UpdateAccountInfo(UpdateUserAccountDto dto)
         {
             var user = this.context.Users.Find(dto.Id);
 
@@ -162,6 +162,14 @@ namespace FootballApp.Services.DataServices
 
             this.context.Users.Update(user);
             this.context.SaveChanges();
+
+            var userDto = this.Authenticate(new UsernamePasswordDto
+            {
+                Username = user.Username,
+                Password = dto.Password
+            });
+
+            return userDto;
         }
 
         public void Delete(DeleteUserDto dto)

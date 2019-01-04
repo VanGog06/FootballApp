@@ -98,11 +98,30 @@ const changePassword = (id, oldPassword, newPassword) => {
                 dispatch(alertActions.success(appConstants.changedPassword))
             },
             error => {
-                dispatch(changePasswordFailure(error.toString()));
+                dispatch(changePasswordFailure());
                 dispatch(alertActions.error(error.toString()));
             });
     };
 };
+
+const updateAccountRequest = _ => { return { type: userConstants.UPDATE_ACCOUNT_REQUEST }};
+const updateAccountSuccess = user => { return { type: userConstants.UPDATE_ACCOUNT_SUCCESS, user }};
+const updateAccountFailure = _ => { return { type: userConstants.UPDATE_ACCOUNT_FAILURE }};
+
+const updateAccount = (id, user) => {
+    return dispatch => {
+        dispatch(updateAccountRequest());
+
+        userService.updateAccount(id, user.password, user.firstName, user.lastName, user.email)
+            .then(user => {
+                dispatch(updateAccountSuccess(user));
+                dispatch(alertActions.success(appConstants.accountUpdated));
+            }, error => {
+                dispatch(updateAccountFailure());
+                dispatch(alertActions.error(error.toString()));
+            });
+    }
+}
 
 export const userActions = {
     login,
@@ -110,5 +129,6 @@ export const userActions = {
     register,
     delete: _delete,
     getAll,
-    changePassword
+    changePassword,
+    updateAccount
 };

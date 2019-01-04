@@ -13,7 +13,7 @@ namespace FootballApp.Services.DataServices.Contracts
 
         void ChangePassword(UpdateUserPasswordDto dto);
 
-        void UpdateAccountInfo(UpdateUserAccountDto dto);
+        UserWithoutPasswordDto UpdateAccountInfo(UpdateUserAccountDto dto);
 
         void Delete(DeleteUserDto dto);
     }

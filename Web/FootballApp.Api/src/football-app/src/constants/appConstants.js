@@ -10,5 +10,6 @@ export const appConstants = {
         lastName: 'Last Name is required',
         email: 'Invalid email address'
     },
-    changedPassword: 'Password changed successfully'
+    changedPassword: 'Password changed successfully',
+    accountUpdated: 'Account info updated successfully'
 };
