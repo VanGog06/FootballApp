@@ -28,10 +28,11 @@ class ProfilePage extends Component {
 
         this.state = {
             activeTab: '1',
-            changePasswordSubmitted: false,
-            changePasswordChanging: false,
-            oldPassword: '',
-            newPassword: '',
+            changePassword: {
+                changePasswordSubmitted: false,
+                oldPassword: '',
+                newPassword: ''
+            },
             updateAccount: {
                 submitted: false,
                 username: props.user.username,
@@ -49,10 +50,13 @@ class ProfilePage extends Component {
         }
     }
 
-    handleChange = event => {
+    handleChangePasswordChange = event => {
         const { name, value } = event.target;
 
-        this.setState({ [name]: value });
+        this.setState({ changePassword: {
+            ...this.state.changePassword,
+            [name]: value 
+        }});
     }
 
     handleUpdateAccountChange = event => {
@@ -65,7 +69,7 @@ class ProfilePage extends Component {
     }
 
     validateChangePasswordInput = _ => {
-        const { oldPassword, newPassword } = this.state;
+        const { oldPassword, newPassword } = this.state.changePassword;
 
         if (oldPassword.length < appConstants.passwordMinLength) {
             return false;
@@ -78,14 +82,17 @@ class ProfilePage extends Component {
         return true;
     }
 
-    handleChangePageSubmit = event => {
+    handleChangePasswordSubmit = event => {
         event.preventDefault();
         const { dispatch, user } = this.props;
-        const { oldPassword, newPassword  } = this.state;
+        const { oldPassword, newPassword  } = this.state.changePassword;
 
         dispatch(alertActions.clear());
 
-        this.setState({ changePasswordSubmitted: true });
+        this.setState({ changePassword: {
+            ...this.state.changePassword,
+            changePasswordSubmitted: true 
+        }});
 
         const isFormValid = this.validateChangePasswordInput();
 
@@ -133,7 +140,7 @@ class ProfilePage extends Component {
 
     render() {
         const { user, changingPassword, updatingAccount } = this.props;
-        const { changePasswordSubmitted, oldPassword, newPassword, updateAccount  } = this.state;
+        const { changePassword, updateAccount  } = this.state;
 
         return (
             <Container>
@@ -190,12 +197,12 @@ class ProfilePage extends Component {
                                     <Col sm="12">
                                         <ChangePassword
                                             changing={changingPassword}
-                                            submitted={changePasswordSubmitted}
+                                            submitted={changePassword.changePasswordSubmitted}
                                             username={user.username}
-                                            oldPassword={oldPassword}
-                                            newPassword={newPassword}
-                                            handleChange={this.handleChange}
-                                            handleSubmit={this.handleChangePageSubmit}
+                                            oldPassword={changePassword.oldPassword}
+                                            newPassword={changePassword.newPassword}
+                                            handleChange={this.handleChangePasswordChange}
+                                            handleSubmit={this.handleChangePasswordSubmit}
                                         />
                                     </Col>
                                 </Row>
