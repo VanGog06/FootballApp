@@ -106,13 +106,5 @@ namespace FootballApp.Api.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-
-        //[Authorize(Roles = "Admin")]
-        public IActionResult GetAll()
-        {
-            var users = this.userService.GetAll();
-
-            return Ok(users);
-        }
     }
 }

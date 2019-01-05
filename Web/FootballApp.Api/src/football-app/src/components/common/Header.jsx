@@ -49,6 +49,9 @@ class Header extends Component {
                             ) : (
                                 <React.Fragment>
                                     <NavItem className="navLink">
+                                        <NavLink to="/">Home</NavLink>
+                                    </NavItem>
+                                    <NavItem className="navLink">
                                         <NavLink to="/login">Login</NavLink>
                                     </NavItem>
                                     <NavItem className="navLink">

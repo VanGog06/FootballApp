@@ -41,6 +41,32 @@ hr {
   margin-bottom: 0 !important;
 }
 
+.card {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  height: 450px;
+}
+
+.card-title {
+  font-size: 2rem;
+}
+
+.eredivisieCard img {
+  padding: 25px;
+}
+
+.primeradivisionCard img,
+.premierleagueCard img {
+  margin-top: 25px;
+  padding: 20px;
+}
+
+.ligue1Card {
+  padding-top: 15px;
+}
+
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

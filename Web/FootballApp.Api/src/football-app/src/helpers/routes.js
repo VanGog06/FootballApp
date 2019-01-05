@@ -7,7 +7,6 @@ export const routes = [
     {
         path: '/',
         exact: true,
-        isPrivate: true,
         component: HomePageContainer
     },
     {

@@ -7,8 +7,6 @@ namespace FootballApp.Services.DataServices.Contracts
     {
         UserWithoutPasswordDto Authenticate(UsernamePasswordDto usernamePasswordDto);
 
-        IEnumerable<UserWithoutPasswordDto> GetAll();
-
         UserDto Create(UserDto userDto);
 
         void ChangePassword(UpdateUserPasswordDto dto);

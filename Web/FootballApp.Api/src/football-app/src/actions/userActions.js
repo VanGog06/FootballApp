@@ -1,7 +1,10 @@
-import { userConstants, appConstants } from '../constants';
+import { 
+    userConstants,
+    appConstants
+} from '../constants';
 import { userService } from '../services';
 import { alertActions } from './';
-import { history } from '../helpers'
+import { history } from '../helpers';
 
 const loginRequest = (user) => { return { type: userConstants.LOGIN_REQUEST, user }};
 const loginSuccess = (user) => { return { type: userConstants.LOGIN_SUCCESS, user }};
@@ -68,24 +71,6 @@ const _delete = (id, password) => {
     };
 };
 
-const getAllRequest = _ => { return { type: userConstants.GETALL_REQUEST }};
-const getAllSuccess = users => { return { type: userConstants.GETALL_SUCCESS, users }};
-const getAllFailure = error => { return { type: userConstants.GETALL_FAILURE, error }};
-
-const getAll = _ => {
-    return dispatch => {
-        dispatch(getAllRequest());
-
-        userService.getAll()
-            .then(users => {
-                dispatch(getAllSuccess(users));
-            },
-            error => {
-                dispatch(getAllFailure(error.toString()));
-            });
-    };
-};
-
 const changePasswordRequest = _ => { return { type: userConstants.CHANGE_PASSWORD_REQUEST }};
 const changePasswordSuccess = _ => { return { type: userConstants.CHANGE_PASSWORD_SUCCESS }};
 const changePasswordFailure = error => { return { type: userConstants.CHANGE_PASSWORD_FAILURE, error }};
@@ -130,7 +115,6 @@ export const userActions = {
     logout,
     register,
     delete: _delete,
-    getAll,
     changePassword,
     updateAccount
 };

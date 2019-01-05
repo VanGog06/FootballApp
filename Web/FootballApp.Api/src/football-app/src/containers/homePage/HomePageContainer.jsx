@@ -1,41 +1,44 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import { userActions } from '../../actions';
+import { competitionActions } from '../../actions';
 
 import HomePage from '../../components/homePage/HomePage';
 
 class HomePageContainer extends Component {
     componentDidMount() {
-        this.props.dispatch(userActions.getAll());
-    }
-
-    handleDeleteUser = (id) => {
-        return (e) => this.props.dispatch(userActions.delete(id));
+        this.props.dispatch(competitionActions.getAll());
     }
 
     render() {
-        const { user, users } = this.props;
+        const { competitions } = this.props;
 
         return (
-            <HomePage
-                user={user}
-                users={users}
-                handleDeleteUser={this.handleDeleteUser}
-            />
+            <React.Fragment>
+                <h1 className='text-center pt-2'>Competitions</h1>
+
+                <HomePage competitions={competitions} />
+            </React.Fragment>
         );
     }
 }
 
 const mapStateToProps = (state) => {
-    const { users, authentication } = state;
-    const { user } = authentication;
+    const { competitions } = state.competition;
     
-    return {
-        user,
-        users
-    };
+    return { competitions };
 }
+
+HomePageContainer.propTypes = {
+    competitions: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.number,
+            name: PropTypes.string,
+            country: PropTypes.string
+        })
+    )
+};
 
 const connectedHomePage = connect(mapStateToProps)(HomePageContainer);
 

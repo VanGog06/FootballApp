@@ -11,10 +11,6 @@ import { PrivateRoute } from './components/PrivateRoute';
 import { Header } from './components/common';
 import { Footer } from './components/common';
 
-// import { HomePageContainer } from './containers/homePage/HomePageContainer';
-// import { LoginPageContainer } from './containers/loginPage/LoginPageContainer';
-// import { RegisterPageContainer } from './containers/registerPage/RegisterPageContainer';
-
 import './App.css';
 
 class App extends Component {

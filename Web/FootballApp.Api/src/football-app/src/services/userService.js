@@ -50,16 +50,6 @@ const _delete = (id, password) => {
         });
 }
 
-const getAll = _ => {
-    const requestOptions = {
-        method: 'GET',
-        headers: authHeader()
-    };
-
-    return fetch(`${appConstants.apiUrl}/users`, requestOptions)
-        .then(handleResponse);
-}
-
 const changePassword = (id, oldPassword, newPassword) => {
     const requestOptions = {
         method: 'PUT',
@@ -129,7 +119,6 @@ export const userService = {
     login,
     register,
     logout,
-    getAll,
     delete: _delete,
     changePassword,
     updateAccount

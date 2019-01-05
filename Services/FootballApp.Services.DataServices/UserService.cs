@@ -75,19 +75,6 @@ namespace FootballApp.Services.DataServices
             return userDto;
         }
 
-        public IEnumerable<UserWithoutPasswordDto> GetAll()
-        {
-            return this.context.Users
-                .Select(u => new UserWithoutPasswordDto
-                {
-                    Id = u.Id,
-                    Email = u.Email,
-                    FirstName = u.FirstName,
-                    LastName = u.LastName,
-                    Username = u.Username
-                });
-        }
-
         public UserDto Create(UserDto userDto)
         {
             if (this.context.Users.Any(x => x.Username == userDto.Username))
