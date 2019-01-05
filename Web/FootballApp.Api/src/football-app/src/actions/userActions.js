@@ -48,20 +48,22 @@ const register = (user) => {
     };
 };
 
-const deleteRequest = (id) => { return { type: userConstants.DELETE_REQUEST, id }};
-const deleteSuccess = (id) => { return { type: userConstants.DELETE_SUCCESS, id }};
-const deleteFailure = (id, error) => { return { type: userConstants.DELETE_FAILURE, id, error }};
+const deleteRequest = _ => { return { type: userConstants.DELETE_REQUEST }};
+const deleteSuccess = _ => { return { type: userConstants.DELETE_SUCCESS }};
+const deleteFailure = _ => { return { type: userConstants.DELETE_FAILURE }};
 
-const _delete = (id) => {
+const _delete = (id, password) => {
     return dispatch => {
         dispatch(deleteRequest(id));
 
-        userService.delete(id)
+        userService.delete(id, password)
             .then(_ => {
-                dispatch(deleteSuccess(id));
+                dispatch(deleteSuccess());
+                history.push('/login');
             },
             error => {
-                dispatch(deleteFailure(id, error.toString()));
+                dispatch(deleteFailure());
+                dispatch(alertActions.error(error.toString()));
             });
     };
 };

@@ -36,14 +36,18 @@ const register = (user) => {
         .then(handleResponse);
 }
 
-const _delete = (id) => {
+const _delete = (id, password) => {
     const requestOptions = {
         method: 'DELETE',
-        headers: authHeader()
+        headers: authHeader(),
+        body: JSON.stringify({ password })
     };
 
     return fetch(`${appConstants.apiUrl}/users/delete/${id}`, requestOptions)
-        .then(handleResponse);
+        .then(handleResponse)
+        .then(_ => {
+            logout();
+        });
 }
 
 const getAll = _ => {

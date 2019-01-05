@@ -16,11 +16,16 @@ import classnames from 'classnames';
 import { 
     AccountDetails,
     ChangePassword,
-    UpdateAccount
+    UpdateAccount,
+    DeleteAccount
 } from './';
 
 import { appConstants } from '../../constants';
-import { userActions, alertActions } from '../../actions';
+
+import { 
+    userActions,
+    alertActions
+} from '../../actions';
 
 class ProfilePage extends Component {
     constructor(props) {
@@ -40,6 +45,11 @@ class ProfilePage extends Component {
                 firstName: props.user.firstName,
                 lastName: props.user.lastName,
                 email: props.user.email
+            },
+            deleteAccount: {
+                submitted: false,
+                username: props.user.username,
+                password: ''
             }
         };
     }
@@ -68,6 +78,15 @@ class ProfilePage extends Component {
         }});
     }
 
+    handleDeleteAccountChange = event => {
+        const { name, value } = event.target;
+
+        this.setState({ deleteAccount: {
+            ...this.state.deleteAccount,
+            [name]: value 
+        }});
+    }
+
     validateChangePasswordInput = _ => {
         const { oldPassword, newPassword } = this.state.changePassword;
 
@@ -76,6 +95,34 @@ class ProfilePage extends Component {
         }
 
         if (newPassword.length < appConstants.passwordMinLength) {
+            return false;
+        }
+
+        return true;
+    }
+
+    validateUpdateAccountSubmit = _ => {
+        const { password, firstName, lastName, email } = this.state.updateAccount;
+
+        if (password.length < appConstants.passwordMinLength) {
+            return false;
+        }
+
+        if (!firstName || !lastName) {
+            return false;
+        }
+
+        if (!appConstants.emailRegex.test(email.toLowerCase())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    validateDeleteAccountSubmit = _ => {
+        const { password } = this.state.deleteAccount;
+
+        if (password.length < appConstants.passwordMinLength) {
             return false;
         }
 
@@ -101,26 +148,9 @@ class ProfilePage extends Component {
         }
     }
 
-    validateUpdateAccountSubmit = _ => {
-        const { password, firstName, lastName, email } = this.state.updateAccount;
-
-        if (password.length < appConstants.passwordMinLength) {
-            return false;
-        }
-
-        if (!firstName || !lastName) {
-            return false;
-        }
-
-        if (!appConstants.emailRegex.test(email.toLowerCase())) {
-            return false;
-        }
-
-        return true;
-    }
-
     handleUpdateAccountSubmit = event => {
         event.preventDefault();
+
         const { dispatch, user } = this.props;
         const { updateAccount } = this.state;
 
@@ -138,9 +168,29 @@ class ProfilePage extends Component {
         }
     }
 
+    handleDeleteAccountSubmit = event => {
+        event.preventDefault();
+
+        const { dispatch, user } = this.props;
+        const { password } = this.state.deleteAccount;
+
+        dispatch(alertActions.clear());
+
+        this.setState({ deleteAccount: {
+            ...this.state.deleteAccount,
+            submitted: true
+        }});
+
+        const isFormValid = this.validateDeleteAccountSubmit();
+
+        if (isFormValid) {
+            dispatch(userActions.delete(user.id, password));
+        }
+    }
+
     render() {
-        const { user, changingPassword, updatingAccount } = this.props;
-        const { changePassword, updateAccount  } = this.state;
+        const { user, changingPassword, updatingAccount, deletingAccount } = this.props;
+        const { changePassword, updateAccount, deleteAccount } = this.state;
 
         return (
             <Container>
@@ -225,7 +275,13 @@ class ProfilePage extends Component {
                             <TabPane tabId="4">
                                 <Row>
                                     <Col sm="12">
-                                        <h4>Tab 4 Contents</h4>
+                                        <DeleteAccount 
+                                            deleting={deletingAccount}
+                                            submitted={deleteAccount.submitted}
+                                            deleteAccount={deleteAccount}
+                                            handleChange={this.handleDeleteAccountChange}
+                                            handleSubmit={this.handleDeleteAccountSubmit}
+                                        />
                                     </Col>
                                 </Row>
                             </TabPane>
@@ -246,13 +302,14 @@ ProfilePage.propTypes = {
         deleteError: PropTypes.string
     }),
     updatingAccount: PropTypes.bool,
-    changingPassword: PropTypes.bool
+    changingPassword: PropTypes.bool,
+    deletingAccount: PropTypes.bool
 };
 
 const mapStateToProps = state => {
-    const { user, changingPassword, updatingAccount } = state.authentication;
+    const { user, changingPassword, updatingAccount, deletingAccount } = state.authentication;
 
-    return { user, changingPassword, updatingAccount };
+    return { user, changingPassword, updatingAccount, deletingAccount };
 };
 
 const connectedProfilePage = connect(mapStateToProps)(ProfilePage);

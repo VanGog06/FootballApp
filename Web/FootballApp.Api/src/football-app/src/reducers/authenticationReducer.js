@@ -20,17 +20,53 @@ export const authentication = (state = initialState, action) => {
         case userConstants.LOGOUT:
             return {};
         case userConstants.CHANGE_PASSWORD_REQUEST:
-            return { ...state, changingPassword: true };
+            return { 
+                ...state,
+                changingPassword: true
+            };
         case userConstants.CHANGE_PASSWORD_SUCCESS:
-            return { ...state, changingPassword: false };
+            return { 
+                ...state,
+                changingPassword: false
+            };
         case userConstants.CHANGE_PASSWORD_FAILURE:
-            return { ...state, changingPassword: false };
+            return { 
+                ...state,
+                changingPassword: false
+            };
         case userConstants.UPDATE_ACCOUNT_REQUEST:
-            return { ...state, updatingAccount: true };
+            return { 
+                ...state,
+                updatingAccount: true
+            };
         case userConstants.UPDATE_ACCOUNT_SUCCESS:
-            return { ...state, updatingAccount: false, user: action.user };
+            return { 
+                ...state,
+                updatingAccount: false,
+                user: action.user
+            };
         case userConstants.UPDATE_ACCOUNT_FAILURE:
-            return { ...state, updatingAccount: false };
+            return { 
+                ...state,
+                updatingAccount: false
+            };
+        case userConstants.DELETE_REQUEST:
+            return { 
+                ...state,
+                deletingAccount: true
+            };
+        case userConstants.DELETE_SUCCESS:
+            return { 
+                ...state,
+                deletingAccount: false,
+                user: {},
+                loggedIn: false
+            };
+        case userConstants.DELETE_FAILURE:
+            return { 
+                ...state,
+                deletingAccount: false
+            };
         default: 
             return state;
     }
