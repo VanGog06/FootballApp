@@ -16,7 +16,7 @@ export const standing = (state = initialState, action) => {
         case standingConstants.GET_TEAMS_REQUEST:
             return initialState;
         case standingConstants.GET_TEAMS_SUCCESS:
-            return { ...state, teams: action.teams };
+            return { ...state, teams: { ...action.teams, team: null } };
         case standingConstants.GET_TEAMS_FAILURE:
             return initialState;
         default:

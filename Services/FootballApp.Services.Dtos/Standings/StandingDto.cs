@@ -1,8 +1,12 @@
-﻿namespace FootballApp.Services.Dtos.Standings
+﻿using FootballApp.Services.Dtos.Teams;
+
+namespace FootballApp.Services.Dtos.Standings
 {
     public class StandingDto
     {
         public int Id { get; set; }
+
+        public string Name { get; set; }
 
         public int Position { get; set; }
 
@@ -23,5 +27,7 @@
         public int GoalDifference { get; set; }
 
         public int TeamId { get; set; }
+
+        public TeamDto Team { get; set; }
     }
 }
