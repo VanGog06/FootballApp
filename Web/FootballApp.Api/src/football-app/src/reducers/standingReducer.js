@@ -1,7 +1,8 @@
 import { standingConstants } from '../constants';
 
 const initialState = {
-    standings: []
+    standings: [],
+    teams: []
 };
 
 export const standing = (state = initialState, action) => {
@@ -9,8 +10,14 @@ export const standing = (state = initialState, action) => {
         case standingConstants.GET_STANDING_REQUEST:
             return initialState;
         case standingConstants.GET_STANDING_SUCCESS:
-            return { standings: action.standings };
+            return { ...state, standings: action.standings };
         case standingConstants.GET_STANDING_FAILURE:
+            return initialState;
+        case standingConstants.GET_TEAMS_REQUEST:
+            return initialState;
+        case standingConstants.GET_TEAMS_SUCCESS:
+            return { ...state, teams: action.teams };
+        case standingConstants.GET_TEAMS_FAILURE:
             return initialState;
         default:
             return state;

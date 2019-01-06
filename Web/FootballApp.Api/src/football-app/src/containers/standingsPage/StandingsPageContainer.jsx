@@ -9,6 +9,7 @@ class StandingsPageContainer extends Component {
         const { dispatch } = this.props;
 
         dispatch(standingActions.getStanding(country));
+        dispatch(standingActions.getTeams(country));
     }
 
     render() {
@@ -19,9 +20,9 @@ class StandingsPageContainer extends Component {
 }
 
 const mapStateToProps = state => {
-    const { standings } = state.standing;
+    const { standings, teams } = state.standing;
     
-    return { standings };
+    return { standings, teams };
 };
 
 const connectedStandingsPage = connect(mapStateToProps)(StandingsPageContainer);

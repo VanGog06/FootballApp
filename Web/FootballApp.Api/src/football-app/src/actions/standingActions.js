@@ -21,4 +21,25 @@ const getStanding = country => {
     };
 };
 
-export const standingActions = { getStanding };
+const getTeamsRequest = _ => { return { type: standingConstants.GET_TEAMS_REQUEST }};
+const getTeamsSuccess = teams => { return { type: standingConstants.GET_TEAMS_SUCCESS, teams }};
+const getTeamsFailure = _ => { return { type: standingConstants.GET_TEAMS_FAILURE }};
+
+const getTeams = country => {
+    return dispatch => {
+        dispatch(getTeamsRequest());
+
+        standingService.getTeams(country)
+            .then(teams => {
+                dispatch(getTeamsSuccess(teams));
+            }, error => {
+                dispatch(getTeamsFailure());
+                dispatch(alertActions.error(error.toString()));
+            });
+    };
+};
+
+export const standingActions = { 
+    getStanding,
+    getTeams
+};

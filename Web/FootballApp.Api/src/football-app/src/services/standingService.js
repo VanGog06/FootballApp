@@ -15,6 +15,16 @@ const getStanding = country => {
         .then(handleResponse);
 };
 
+const getTeams = country => {
+    const requestOptions = {
+        method: 'GET',
+        headers: authHeader()
+    };
+
+    return fetch(`${appConstants.apiUrl}/teams/${country}`, requestOptions)
+        .then(handleResponse);
+}
+
 const handleResponse = (response) => {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
@@ -43,4 +53,7 @@ const handleResponse = (response) => {
     });
 };
 
-export const standingService = { getStanding };
+export const standingService = { 
+    getStanding,
+    getTeams
+};

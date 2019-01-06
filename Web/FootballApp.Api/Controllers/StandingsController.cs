@@ -17,7 +17,7 @@ namespace FootballApp.Api.Controllers
         }
 
         [HttpGet("standing/{country}")]
-        public ActionResult GetById(string country)
+        public ActionResult GetStandingByCountry(string country)
         {
             var standings = this.standingService.GetByCountry(country);
 
