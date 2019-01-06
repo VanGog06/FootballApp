@@ -4,12 +4,14 @@ import { authentication } from './authenticationReducer';
 import { registration } from './registrationReducer';
 import { alert } from './alertReducer';
 import { competition } from './competitionReducer';
+import { standing } from './standingReducer';
 
 const rootReducer = combineReducers({
     authentication,
     registration,
     alert,
-    competition
+    competition,
+    standing
 });
 
 export default rootReducer;

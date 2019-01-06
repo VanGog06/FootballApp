@@ -24,7 +24,7 @@ class HomePageContainer extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     const { competitions } = state.competition;
     
     return { competitions };

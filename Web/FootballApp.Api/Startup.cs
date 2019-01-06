@@ -61,6 +61,7 @@ namespace FootballApp.Api
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICompetitionService, CompetitionService>();
+            services.AddScoped<IStandingService, StandingService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
