@@ -39,7 +39,7 @@ StandingsPageContainer.propTypes = {
             won: PropTypes.number.isRequired,
             team: PropTypes.shape({
                 address: PropTypes.string.isRequired,
-                clubColors: PropTypes.string.isRequired,
+                clubColors: PropTypes.string,
                 crestUrl: PropTypes.string,
                 founded: PropTypes.number.isRequired,
                 id: PropTypes.number.isRequired,

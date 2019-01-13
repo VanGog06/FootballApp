@@ -65,7 +65,25 @@ hr {
   padding-top: 15px;
 }
 
+.media {
+  width: 80% !important;
+}
 
+.media-heading {
+  display: inline-block;
+  border-bottom: 2px solid black;
+  padding-bottom: 10px;
+}
+
+@media only screen and (max-width: 720px) {
+  .media {
+    display: block !important;
+  }
+
+  .media-body {
+    padding-top: 3.5rem !important;
+  }
+}
 
 @keyframes App-logo-spin {
   from {

@@ -16,12 +16,12 @@ namespace FootballApp.Api.Controllers
             this.teamService = teamService;
         }
 
-        [HttpGet("{country}")]
-        public ActionResult GetByCountry(string country)
+        [HttpGet("team/{id}")]
+        public ActionResult GetById(int id)
         {
-            var teams = this.teamService.GetByCountry(country);
+            var team = this.teamService.GetById(id);
 
-            return Ok(teams);
+            return Ok(team);
         }
     }
 }

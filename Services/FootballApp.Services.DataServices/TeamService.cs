@@ -2,8 +2,8 @@
 using System.Linq;
 using FootballApp.Data;
 using FootballApp.Services.DataServices.Contracts;
+using FootballApp.Services.Dtos;
 using FootballApp.Services.Dtos.Teams;
-using Microsoft.EntityFrameworkCore;
 
 namespace FootballApp.Services.DataServices
 {
@@ -16,26 +16,40 @@ namespace FootballApp.Services.DataServices
             this.context = context;
         }
 
-        public ICollection<TeamDto> GetByCountry(string country)
+        public TeamDto GetById(int id)
         {
-            var teams = this.context.Teams
-                .Include(t => t.Competition)
-                .Where(t => t.Competition.Country == country)
-                .Select(t => new TeamDto
+            var team = this.context.Teams.Find(id);
+
+            var players = this.context.Players
+                .Where(p => p.TeamId == team.Id)
+                .Select(p => new PlayerDto
                 {
-                    Id = t.Id,
-                    Name = t.Name,
-                    ShortName = t.ShortName,
-                    Address = t.Address,
-                    Website = t.Website,
-                    CrestUrl = t.CrestUrl,
-                    Venue = t.Venue,
-                    Founded = t.Founded,
-                    ClubColors = t.ClubColors
+                    Id = p.Id,
+                    Name = p.Name,
+                    Role = p.Role,
+                    Position = p.Position,
+                    CountryOfBirth = p.CountryOfBirth,
+                    DateOfBirth = p.DateOfBirth.ToString("dd-MM-yyyy"),
+                    ShirtNumber = p.ShirtNumber,
+                    Nationality = p.Nationality
                 })
                 .ToList();
 
-            return teams;
+            var teamDto = new TeamDto
+            {
+                Id = team.Id,
+                Name = team.Name,
+                ShortName = team.ShortName,
+                Address = team.Address,
+                Website = team.Website,
+                CrestUrl = team.CrestUrl,
+                Venue = team.Venue,
+                Founded = team.Founded,
+                ClubColors = team.ClubColors,
+                Players = players
+            };
+
+            return teamDto;
         }
     }
 }

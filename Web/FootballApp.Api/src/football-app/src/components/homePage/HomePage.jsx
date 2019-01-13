@@ -27,7 +27,7 @@ const HomePage = ({competitions}) => (
             if ((index + 1) % 3 !== 0) {
                 return (
                     <React.Fragment key={competition.id}>
-                        <Col key={competition.id} md='3'>
+                        <Col key={competition.id} md='5' lg='3'>
                             <NavLink to={`competitions/${competition.country.toLowerCase()}`} key={competition.id}>
                                 <Card key={competition.id} className={className}>
                                     <CardImg top src={chooseSvg(competition.country.toLowerCase())} alt={competition.name} />
@@ -38,12 +38,12 @@ const HomePage = ({competitions}) => (
                             </NavLink>
                         </Col>
 
-                        <Col md='1'></Col>
+                        <Col className='d-md-none d-lg-inline-block' lg='1'></Col>
                     </React.Fragment>
                 );
             } else {
                 return (
-                    <Col key={competition.id} md='3'>
+                    <Col key={competition.id} md='5' lg='3'>
                         <NavLink to={`competitions/${competition.country.toLowerCase()}`}>
                             <Card key={competition.id} className={className}>
                                 <CardImg top src={chooseSvg(competition.country.toLowerCase())} alt={competition.name} />

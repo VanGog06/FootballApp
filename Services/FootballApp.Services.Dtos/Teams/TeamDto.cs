@@ -1,4 +1,6 @@
-﻿namespace FootballApp.Services.Dtos.Teams
+﻿using System.Collections.Generic;
+
+namespace FootballApp.Services.Dtos.Teams
 {
     public class TeamDto
     {
@@ -19,5 +21,7 @@
         public string ClubColors { get; set; }
 
         public string Venue { get; set; }
+
+        public ICollection<PlayerDto> Players { get; set; }
     }
 }

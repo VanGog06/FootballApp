@@ -3,6 +3,7 @@ import { LoginPageContainer } from '../containers/loginPage/LoginPageContainer';
 import { RegisterPageContainer } from '../containers/registerPage/RegisterPageContainer';
 import { ProfilePage } from '../components/profile';
 import { StandingsPageContainer } from '../containers/standingsPage/StandingsPageContainer';
+import { TeamPageContainer } from '../containers/teamPage/TeamPageContainer';
 
 export const routes = [
     {
@@ -27,5 +28,10 @@ export const routes = [
         path: '/competitions/:country',
         isPrivate: true,
         component: StandingsPageContainer
+    },
+    {
+        path: '/teams/team/:id',
+        isPrivate: true,
+        component: TeamPageContainer
     }
 ];
